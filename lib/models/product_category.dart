@@ -1,7 +1,7 @@
 class ProductCategory {
-  final String slug;
-  final String name;
-  final String url;
+  final String? slug;
+  final String? name;
+  final String? url;
 
   ProductCategory({required this.slug, required this.name, required this.url});
 

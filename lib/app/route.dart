@@ -10,7 +10,7 @@ final GlobalKey<NavigatorState> rootNavKey = GlobalKey<NavigatorState>();
 
 final Provider<GoRouter> goRouterProvider = Provider<GoRouter>((Ref ref) {
   return GoRouter(
-    initialLocation: '/splash',
+    initialLocation: '/',
     errorBuilder: (BuildContext context, GoRouterState state) =>
         ErrorView(error: state.error.toString()),
     navigatorKey: rootNavKey,
@@ -18,11 +18,6 @@ final Provider<GoRouter> goRouterProvider = Provider<GoRouter>((Ref ref) {
     routes: [
       GoRoute(
         path: '/',
-        builder: (BuildContext context, GoRouterState state) =>
-            const ProductsView(),
-      ),
-      GoRoute(
-        path: '/splash',
         builder: (BuildContext context, GoRouterState state) =>
             const ProductsView(),
       ),

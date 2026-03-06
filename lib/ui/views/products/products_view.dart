@@ -180,7 +180,7 @@ class _ProductsViewState extends ConsumerState<ProductsView> {
         final category = categories[index - 1];
         final isSelected = selectedCategory == category;
         return CategoryChip(
-          category: category.name,
+          category: category.name ?? '',
           isSelected: isSelected,
           onTap: () => notifier.setCategory(category),
         );
