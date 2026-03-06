@@ -214,9 +214,9 @@ class _ProductDetailViewState extends ConsumerState<ProductDetailView> {
                     ],
                   ),
 
-                  SizedBox(height: 24.h),
-                  const Divider(),
-                  SizedBox(height: 16.h),
+                  SizedBox(height: 10.h),
+                  const Divider(thickness: .1),
+                  SizedBox(height: 10.h),
 
                   // Stock Availability
                   Row(
