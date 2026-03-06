@@ -41,7 +41,11 @@ The project follows a clean, feature-driven architectural structure aiming for h
 lib/
 ├── app/            # App-wide configurations like Routing (GoRouter) and responsive helpers
 ├── models/         # Core data structures (e.g., Product, ProductCategory)
-├── providers/      # Dependency injection entries and global Riverpod provider instances
+└── providers/      # Dependency injection entries and global Riverpod provider instances
+    └── Directory/    
+        └── Provider # All the logics which are related to api calls are in here.
+        └── State    # which stores us the state of the provider
+        └── state.freezed
 ├── services/       # Network layers (Dio) connecting to the backend API (`product_api_service.dart`)
 └── ui/
     ├── common/     # App-wide theme configs, colors, typography
@@ -71,15 +75,16 @@ The design logic is fundamentally centralized in `lib/ui/common/` (`app_colors.d
 
 If granted more time, several boundaries of the application could be enhanced:
 1.  **Pagination Optimization & Debouncing:** The current "scroll-to-bottom" listener in `ProductsView` could be enhanced with better debouncing to prevent repetitive network triggers easily. Furthermore, the search bar lacks immediate debouncing currently.
-2.  **Robust Error Handling Interceptors:** The `Dio` client relies on manual HTTP response logic block interpretation. I would implement an App-level network interceptor to globally funnel exceptions (e.g., internet connection drops) via an overarching snack-bar service.
-3.  **Local Caching Policy:** Hive dependencies sit in the pubspec but are utilized minimally for caching. Implementing offline-first reads for `categories` and `products` would massively speed up startup times.
+3.  **Local Caching Policy:** Hive dependencies sit in the pubspec but are not utilized for caching. Implementing offline-first reads for `categories` and `products` would massively speed up startup times.
 4.  **UI Layout Modularity:** In `products_view.dart`, checking `ResponsiveHelper.isTab()` controls rendering a Master-Detail format. Refactoring this into a more generic `AdaptiveLayoutWidget` would keep the Products screen code drastically shorter.
-
+5.  **UI Improvment:** I would take some more time to make the UI intuative.
+6.  **Write More Tests:** I couldn't get time to write all test cases.
+7.  **Implement Dark Mode and Light Mode Feature:** I structured the project in a way to enable Theme toggling but I couldn't get time to finalize it.
 ---
 
 ## AI Tools Usage
 
 During the course of developing and refining this project, AI tooling (specifically DeepMind agents) was utilized prominently for:
 1.  **Scaffolding & Boilerplates:** Rapidly formatting Freezed states and drafting `StateNotifier` boilerplate structures.
-2.  **Test Implementations:** The AI agents drastically sped up generation of Unit Tests mapping large dummy JSON payloads directly to model classes (`Product.fromJson`) and implementing Widget tests for isolated components (`CategoryChip`).
-3.  **Refactoring Output Verification:** An AI agent detected that legacy boolean-flags in states (like `isLoadingInitial: true`) violated the strict assignment rules and subsequently rewrote the Freezed classes to strictly typed Unions (yielding `.loading()`, `.loaded()`), refactoring the UI pattern-matching accurately alongside it. I manually guided this architectural execution constraint logic but let the agent refactor the bulk syntax.
+2.  **To Generate Dart Models:** Creating a dart Models from such a large json file got a bit time consuming and so I used AI to help me generate Dart Models from an api response.
+4.  **Help on Documentation:** I used an AI to help me organize this README documentation.
