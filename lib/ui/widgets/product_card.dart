@@ -25,7 +25,7 @@ class ProductCard extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.r),
         ),
-        elevation: 2,
+        // elevation: 1,
         clipBehavior: Clip.antiAlias,
         child: IntrinsicHeight(
           child: Row(
@@ -46,6 +46,11 @@ class ProductCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
+                            product.category.toUpperCase(),
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(color: primaryColor),
+                          ),
+                          Text(
                             product.title,
                             style: Theme.of(context).textTheme.titleMedium
                                 ?.copyWith(fontWeight: FontWeight.bold),
@@ -54,10 +59,12 @@ class ProductCard extends StatelessWidget {
                           ),
                           SizedBox(height: 4.h),
                           Text(
-                            product.category,
+                            product.description,
                             style: Theme.of(
                               context,
                             ).textTheme.bodySmall?.copyWith(color: mediumGrey),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ],
                       ),
