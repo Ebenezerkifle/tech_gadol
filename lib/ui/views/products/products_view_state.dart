@@ -6,8 +6,8 @@ part 'products_view_state.freezed.dart';
 
 @freezed
 sealed class ProductsViewState with _$ProductsViewState {
-  // const factory ProductsViewState.initial() = _Initial;
-  // const factory ProductsViewState.loading() = _Loading;
+  const factory ProductsViewState.initial() = _Initial;
+  const factory ProductsViewState.loading() = _Loading;
 
   const factory ProductsViewState.loaded({
     required List<Product> products,
