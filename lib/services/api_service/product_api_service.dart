@@ -23,7 +23,7 @@ class ProductApiService extends ParentApiService {
     }
 
     if (searchQuery != null && searchQuery.isNotEmpty) {
-      // url += '/search';
+      url += '/search';
       queryParameters['q'] = searchQuery;
     }
 
