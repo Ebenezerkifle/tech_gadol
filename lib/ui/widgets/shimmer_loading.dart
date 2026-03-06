@@ -20,7 +20,7 @@ class _ShimmerLoadingState extends State<ShimmerLoading> {
   Widget build(BuildContext context) {
     if (!widget.isLoading) return widget.child;
     return Shimmer.fromColors(
-      baseColor: Colors.grey[300]!,
+      baseColor: Colors.grey[400]!,
       highlightColor: Colors.grey[100]!,
       child: widget.child,
     );

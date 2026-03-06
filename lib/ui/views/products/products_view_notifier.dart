@@ -25,7 +25,8 @@ class ProductsViewNotifier extends StateNotifier<ProductsViewState> {
         provider.getCategories(),
         provider.getProducts(
           limit: _limit,
-          skip: 0, // In original code state.searchQuery and state.selectedCategory?.slug was used but we start fresh on init
+          skip:
+              0, // In original code state.searchQuery and state.selectedCategory?.slug was used but we start fresh on init
           searchQuery: null,
           category: null,
         ),
@@ -35,12 +36,14 @@ class ProductsViewNotifier extends StateNotifier<ProductsViewState> {
       final products = results[1] as List<Product>;
 
       if (products.isEmpty) {
-        _setState(ProductsViewState.empty(
-          categories: categories,
-          selectedCategory: null,
-          searchQuery: null,
-          selectedProductId: null,
-        ));
+        _setState(
+          ProductsViewState.empty(
+            categories: categories,
+            selectedCategory: null,
+            searchQuery: null,
+            selectedProductId: null,
+          ),
+        );
       } else {
         _setState(
           ProductsViewState.loaded(
@@ -60,53 +63,65 @@ class ProductsViewNotifier extends StateNotifier<ProductsViewState> {
 
   Future<void> loadMore() async {
     await state.maybeWhen(
-      loaded: (products, categories, selectedCategory, searchQuery,
-          selectedProductId, isFetchingMore, hasMore) async {
-        if (isFetchingMore || !hasMore) return;
+      loaded:
+          (
+            products,
+            categories,
+            selectedCategory,
+            searchQuery,
+            selectedProductId,
+            isFetchingMore,
+            hasMore,
+          ) async {
+            if (isFetchingMore || !hasMore) return;
 
-        _setState(ProductsViewState.loaded(
-          products: products,
-          categories: categories,
-          selectedCategory: selectedCategory,
-          searchQuery: searchQuery,
-          selectedProductId: selectedProductId,
-          isFetchingMore: true,
-          hasMore: hasMore,
-        ));
+            _setState(
+              ProductsViewState.loaded(
+                products: products,
+                categories: categories,
+                selectedCategory: selectedCategory,
+                searchQuery: searchQuery,
+                selectedProductId: selectedProductId,
+                isFetchingMore: true,
+                hasMore: hasMore,
+              ),
+            );
 
-        final provider = ref.read(productsProvider.notifier);
+            final provider = ref.read(productsProvider.notifier);
 
-        try {
-          final newProducts = await provider.getProducts(
-            limit: _limit,
-            skip: products.length,
-            searchQuery: searchQuery,
-            category: selectedCategory?.slug,
-          );
+            try {
+              final newProducts = await provider.getProducts(
+                limit: _limit,
+                skip: products.length,
+                searchQuery: searchQuery,
+                category: selectedCategory?.slug,
+              );
 
-          _setState(
-            ProductsViewState.loaded(
-              products: [...products, ...newProducts],
-              categories: categories,
-              selectedCategory: selectedCategory,
-              searchQuery: searchQuery,
-              selectedProductId: selectedProductId,
-              isFetchingMore: false,
-              hasMore: newProducts.length == _limit,
-            ),
-          );
-        } catch (e) {
-           _setState(ProductsViewState.error('Failed to load more products: $e'));
-        }
-      },
+              _setState(
+                ProductsViewState.loaded(
+                  products: [...products, ...newProducts],
+                  categories: categories,
+                  selectedCategory: selectedCategory,
+                  searchQuery: searchQuery,
+                  selectedProductId: selectedProductId,
+                  isFetchingMore: false,
+                  hasMore: newProducts.length == _limit,
+                ),
+              );
+            } catch (e) {
+              _setState(
+                ProductsViewState.error('Failed to load more products: $e'),
+              );
+            }
+          },
       orElse: () {},
     );
   }
 
   Future<void> setSearchQuery(String query) async {
     final currentSearchQuery = state.maybeWhen(
-      loaded: (_, __, ___, sq, ____, _____, ______) => sq,
-      empty: (_, __, sq, ___) => sq,
+      loaded: (_, _, _, sq, _, _, _) => sq,
+      empty: (_, _, sq, _) => sq,
       orElse: () => null,
     );
     if (currentSearchQuery == query) return;
@@ -116,8 +131,8 @@ class ProductsViewNotifier extends StateNotifier<ProductsViewState> {
 
   Future<void> setCategory(ProductCategory? category) async {
     final currentCategory = state.maybeWhen(
-      loaded: (_, __, cat, ____, _____, ______, _______) => cat,
-      empty: (_, cat, ___, ____) => cat,
+      loaded: (_, _, cat, _, _, _, _) => cat,
+      empty: (_, cat, _, _) => cat,
       orElse: () => null,
     );
     if (currentCategory == category) return;
@@ -127,27 +142,39 @@ class ProductsViewNotifier extends StateNotifier<ProductsViewState> {
 
   void setSelectedProductId(String? id) {
     state.maybeWhen(
-      loaded: (products, categories, selectedCategory, searchQuery,
-          _, isFetchingMore, hasMore) {
-        _setState(ProductsViewState.loaded(
-          products: products,
-          categories: categories,
-          selectedCategory: selectedCategory,
-          searchQuery: searchQuery,
-          selectedProductId: id,
-          isFetchingMore: isFetchingMore,
-          hasMore: hasMore,
-        ));
-      },
+      loaded:
+          (
+            products,
+            categories,
+            selectedCategory,
+            searchQuery,
+            _,
+            isFetchingMore,
+            hasMore,
+          ) {
+            _setState(
+              ProductsViewState.loaded(
+                products: products,
+                categories: categories,
+                selectedCategory: selectedCategory,
+                searchQuery: searchQuery,
+                selectedProductId: id,
+                isFetchingMore: isFetchingMore,
+                hasMore: hasMore,
+              ),
+            );
+          },
       empty: (categories, selectedCategory, searchQuery, _) {
-       _setState(ProductsViewState.empty(
-          categories: categories,
-          selectedCategory: selectedCategory,
-          searchQuery: searchQuery,
-          selectedProductId: id,
-        ));
+        _setState(
+          ProductsViewState.empty(
+            categories: categories,
+            selectedCategory: selectedCategory,
+            searchQuery: searchQuery,
+            selectedProductId: id,
+          ),
+        );
       },
-      orElse: () {}
+      orElse: () {},
     );
   }
 
@@ -155,7 +182,7 @@ class ProductsViewNotifier extends StateNotifier<ProductsViewState> {
     await state.maybeWhen(
       initial: () => _initialize(),
       error: (_) => _initialize(), // Retry fetches completely
-      orElse: () => _initialize(), 
+      orElse: () => _initialize(),
     );
   }
 
@@ -163,25 +190,29 @@ class ProductsViewNotifier extends StateNotifier<ProductsViewState> {
     String? searchQuery,
     ProductCategory? category,
   }) async {
-     // Retrieve base categories
-     final categories = state.maybeMap(
-        loaded: (s) => s.categories,
-        empty: (s) => s.categories,
-        orElse: () => <ProductCategory>[],
-     );
+    // Retrieve base categories
+    final categories = state.maybeMap(
+      loaded: (s) => s.categories,
+      empty: (s) => s.categories,
+      orElse: () => <ProductCategory>[],
+    );
 
     // Keep old values if not passed
-    final newSearchQuery = searchQuery ?? state.maybeMap(
-      loaded: (s) => s.searchQuery,
-      empty: (s) => s.searchQuery,
-      orElse: () => null,
-    );
+    final newSearchQuery =
+        searchQuery ??
+        state.maybeMap(
+          loaded: (s) => s.searchQuery,
+          empty: (s) => s.searchQuery,
+          orElse: () => null,
+        );
 
-    final newCategory = category ?? state.maybeMap(
-      loaded: (s) => s.selectedCategory,
-      empty: (s) => s.selectedCategory,
-      orElse: () => null,
-    );
+    final newCategory =
+        category ??
+        state.maybeMap(
+          loaded: (s) => s.selectedCategory,
+          empty: (s) => s.selectedCategory,
+          orElse: () => null,
+        );
 
     _setState(const ProductsViewState.loading());
     final provider = ref.read(productsProvider.notifier);
@@ -195,12 +226,14 @@ class ProductsViewNotifier extends StateNotifier<ProductsViewState> {
       );
 
       if (products.isEmpty) {
-        _setState(ProductsViewState.empty(
-          categories: categories,
-          selectedCategory: newCategory,
-          searchQuery: newSearchQuery,
-          selectedProductId: null,
-        ));
+        _setState(
+          ProductsViewState.empty(
+            categories: categories,
+            selectedCategory: newCategory,
+            searchQuery: newSearchQuery,
+            selectedProductId: null,
+          ),
+        );
       } else {
         _setState(
           ProductsViewState.loaded(
